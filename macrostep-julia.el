@@ -38,7 +38,8 @@
 
 (eval-when-compile
   (require 'subr-x)
-
+  (defvar julia-hanging-operator-regexp)
+  
   (unless (fboundp 'ignore-errors)
     (defmacro ignore-errors (&rest body)
       `(condition-case nil (progn ,@body) (error nil)))))
@@ -151,7 +152,7 @@
 ;; send string to inferior process, redirecting output to
 ;; `macrostep-julia-output-buffer' temporarily to process string
 (defun macrostep-julia-get-expansion (string)
-  (when-let ((proc (macrostep-julia-inf-process)))
+  (when-let* ((proc (macrostep-julia-inf-process)))
     (let* ((out-buffer (get-buffer-create macrostep-julia-output-buffer))
            (og-buff (process-buffer proc))
            (og-filt (process-filter proc))

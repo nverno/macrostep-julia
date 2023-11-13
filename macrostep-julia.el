@@ -1,4 +1,4 @@
-;;; macrostep-julia --- macrostepper for julia
+;;; macrostep-julia --- macrostepper for julia  -*- lexical-binding: t; -*-
 
 ;; Author: Noah Peart <noah.v.peart@gmail.com>
 ;; URL: https://github.com/nverno/macrostep-julia
@@ -90,7 +90,7 @@
 (defun macrostep-julia-sexp-bounds ()
   (save-excursion
     (let ((bnds (bounds-of-thing-at-point 'symbol))
-          (bol (point-at-bol)))
+          (bol (line-beginning-position)))
       (while (not (or (< (point) bol)
                       (eq ?@ (char-after (car bnds)))))
         (backward-sexp)
@@ -113,7 +113,7 @@
           (forward-comment (point-max))
           (forward-line 1)
           (beginning-of-line))
-        (cons (car bnds) (point-at-eol)))))))
+        (cons (car bnds) (line-end-position)))))))
 
 (defun macrostep-julia-sexp-at-point (start end)
   (cons start end))
@@ -189,8 +189,8 @@
         (goto-char (point-min))
         (when (looking-at-p "ERROR")
           (error "Macro expansion failed: %s"
-                 (buffer-substring-no-properties (point-at-bol)
-                                                 (point-at-eol))))
+                 (buffer-substring-no-properties
+                  (line-beginning-position) (line-end-position))))
         (condition-case nil
             (re-search-forward prompt)
           (error (signal 'macrostep-julia-expansion-failure nil)))

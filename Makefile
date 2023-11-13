@@ -1,7 +1,7 @@
-emacs ?= emacs
+
+emacs = emacs
 
 .PHONY: test
-all: test
 test:
-	$(emacs) -Q -batch -L . -l ert -l test/mj-tests.el \
+	emacs -Q -batch -L . -l ert -l ./test/macrostep-julia-tests.el \
 	-f ert-run-tests-batch-and-exit
